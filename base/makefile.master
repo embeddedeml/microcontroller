@@ -15,10 +15,12 @@ AVRDUDE_WRITE_FLASH = -U flash:w:$(OUTPUT_DIR)/$(TARGET).hex
 AVRDUDE_FLAGS = -F -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) -b $(UPLOAD_RATE) -C $(ARDUINO_DIR)/hardware/tools/avrdude.conf
 
 # directories
+TOOLS_DIR = ../build/linux
+ARDUINO_DIR = ../arduino
+
 OUTPUT_DIR = obj
-ARDUINO_DIR = /home/mepping/Software/arduino
-AVRDUDE = $(ARDUINO_DIR)/hardware/tools/avrdude
-BIN = $(ARDUINO_DIR)/hardware/tools/avr/bin
+AVRDUDE = $(TOOLS_DIR)/avrdude
+BIN = $(TOOLS_DIR)/avr/bin
 ARDUINO_LIBS_DIR = $(ARDUINO_DIR)/libraries
 ARDUINO_CORE_DIR = $(ARDUINO_DIR)/hardware/arduino/cores/arduino
 BASE_LIBS_DIR = ../base

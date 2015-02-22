@@ -1,5 +1,6 @@
 # location of the arduino install folder
-ARDUINO_DIR = /home/mepping/Software/arduino
+ARDUINO_DIR = ../../arduino
+COMPILER_DIR = ../../build/linux
 
 # name of this project (used for the output files)
 TARGET = atmega32u4
@@ -35,7 +36,7 @@ LINK_FLAGS = -Os -Wl,--gc-sections -mmcu=$(MCU) -L$(OUTPUT_DIR) -lm
 
 # location of various tools
 AVRDUDE = $(ARDUINO_DIR)/hardware/tools/avrdude
-BIN = $(ARDUINO_DIR)/hardware/tools/avr/bin
+BIN = $(COMPILER_DIR)/avr/bin
 CORE_DIR = $(ARDUINO_DIR)/hardware/arduino/cores/arduino
 VAR_DIR = $(ARDUINO_DIR)/hardware/arduino/variants/leonardo
 LIBS_DIR = $(ARDUINO_DIR)/libraries
