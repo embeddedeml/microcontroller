@@ -1,0 +1,151 @@
+<project name="master" default="all" basedir=".">
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+
+    <description>
+        master build file
+    </description>
+
+	<property name="debug" value="false" />
+	
+	<!-- property file -->
+	<fail message="FILE NOT FOUND: ${project.path}/build.properties">
+    	<condition><not>
+			<available file="${project.path}/build.properties" />
+	    </not></condition>
+	</fail>
+	<xmlproperty file="${project.path}/build.properties" />
+		
+	<!-- paths -->
+	<property name="path.separator"     value="/" />
+	<property name="path.libraries"     value="." />
+	<property name="path.arduino_core"  value="../arduino/hardware/arduino/cores/arduino" />
+	<property name="path.avr"           value="../build/linux/avr/bin" />
+	<property name="path.gcc"  			value="${path.avr}/avr-gcc" />
+	<property name="path.copy" 			value="${path.avr}/avr-objcopy" />
+	<property name="path.output" 		value="${project.path}/output" />
+	<property name="path.arduinolib" 	value="Arduino/obj/atmega32u4.a" />
+	<property name="path.avrdude"   	value="../build/linux/avrdude" />
+
+	<!-- compiler/linker flags -->
+	<property name="compiler.cflags"    value="-c -g -Os -Wall -ffunction-sections -fdata-sections -mmcu=${project.mcu} ${project.cflags}"/>
+	<property name="compiler.cppflags"  value="-fno-exceptions ${compiler.cflags}"/>
+	<property name="compiler.linkflags" value="-Os -Wl,--gc-sections -mmcu=${project.mcu} -L${path.output} -lm"/>
+
+	<!-- avrdude flags -->
+	<property name="avrdude.flags"    value="-F -p ${project.mcu} -P /dev/ttyACM0 -c avr109 -b 19200 -C ../build/linux/avrdude.conf" />
+	<property name="avrdude.writeflash"    value="-U flash:w:${path.output}/${project.name}.hex" />
+
+	<!-- include paths -->
+	<var name="compiler.includes" value="-I${path.arduino_core}" />
+	<for list="${project.dirs}" delimiter="," param="element">
+		<sequential>
+			<var name="compiler.includes" value="${compiler.includes} -I${project.path}/@{element} " />
+		</sequential>
+	</for>
+	<for list="${project.libraries}" delimiter="," param="element">
+		<sequential>
+			<var name="compiler.includes" value="${compiler.includes} -I${path.libraries}/@{element} " />
+		</sequential>
+	</for>
+	
+	<!-- targets --> 
+	<target name="all" depends="clean, hex">
+		<echo>Build complete</echo>
+	</target>
+
+	<target name="clean">
+		<delete dir="${path.output}" />
+		<mkdir dir="${path.output}" />
+		<echo>Project cleaned</echo>
+	</target>
+
+	<target name="hex" depends="elf">
+		<if><equals arg1="${debug}" arg2="true" /><then>
+		   <echo message="${path.copy} -O ihex -R .eeprom ${path.output}/${project.name}.elf ${path.output}/${project.name}.hex" />
+		</then></if>
+
+		<exec executable="${path.copy}">
+    		<arg line="-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 ${path.output}/${project.name}.elf ${path.output}/${project.name}.eep" />
+		</exec>
+		<exec executable="${path.copy}">
+    		<arg line="-O ihex -R .eeprom ${path.output}/${project.name}.elf ${path.output}/${project.name}.hex" />
+		</exec>
+		<echo>Hex-File created</echo>
+	</target>
+
+	<target name="elf" depends="source">
+		<!-- get object list -->
+		<fileset id="objects" dir="${path.output}">
+		    <include name="*.o" />
+		</fileset>
+		<pathconvert pathsep=" ${path.output}/" property="objectlist" refid="objects">
+			<mapper type="flatten" />
+		</pathconvert>
+
+		<!-- linker -->
+		<if><equals arg1="${debug}" arg2="true" /><then>
+		   <echo message="${path.gcc} ${compiler.linkflags} -o ${path.output}/${project.name}.elf ${path.output}/${objectlist} ${path.arduinolib}" />
+		</then></if>
+
+		<exec executable="${path.gcc}">
+    		<arg line="${compiler.linkflags} -o ${path.output}/${project.name}.elf ${path.output}/${objectlist} ${path.arduinolib}" />
+		</exec>
+		<echo>Elf-File created</echo>
+	</target>
+
+	<target name="source">
+		<!-- project source dirs -->
+		<for list="${project.dirs}" delimiter="," param="element">
+			<sequential>
+				<antcall target="buildFolder">
+    				<param name="inputFolder" value="${project.path}/@{element}"/>
+				</antcall>
+			</sequential>
+		</for>
+
+		<!-- library source dirs -->
+		<for list="${project.libraries}" delimiter="," param="element">
+			<sequential>
+				<antcall target="buildFolder">
+    				<param name="inputFolder" value="${path.libraries}/@{element}"/>
+				</antcall>
+			</sequential>
+		</for>
+
+		<echo>Source files built</echo>
+	</target>
+
+	<target name="buildFolder">
+		<foreach target="buildFile" param="inputFile">
+			<path>
+				<fileset dir="${inputFolder}">
+					<include name="*.cpp"/>
+				</fileset>
+			</path>
+		</foreach>
+	</target>
+
+	<target name="buildFile">
+		<basename property="output" file="${inputFile}" />
+
+		<echo>${output}</echo>
+		<if><equals arg1="${debug}" arg2="true" /><then>
+		   <echo message="${path.gcc} ${compiler.cppflags} ${compiler.includes} -MMD ${inputFile} -o ${path.output}/${output}.o" />
+		</then></if>
+
+		<exec executable="${path.gcc}">
+    		<arg line="${compiler.cppflags} ${compiler.includes} -MMD ${inputFile} -o ${path.output}/${output}.o" />
+		</exec>
+	</target>
+
+	<target name="deploy" depends="all">
+		<if><equals arg1="${debug}" arg2="true" /><then>
+		   <echo message="${path.avrdude} ${avrdude.flags} ${avrdude.writeflash}" />
+		</then></if>
+
+		<exec executable="${path.avrdude}">
+    		<arg line="${avrdude.flags} ${avrdude.writeflash}" />
+		</exec>
+	</target>
+
+</project>
