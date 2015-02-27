@@ -7,6 +7,19 @@
 
 	<property name="debug" value="false" />
 	
+	<!-- OS -->
+	<if>
+		<equals arg1="${ostype}" arg2="win" />
+		<then>
+			<property name="path.sep" value="\" />
+			<property name="path.avr" location="../build/win/avr/bin" />
+		</then>
+		<else>
+			<property name="path.sep" value="/" />
+			<property name="path.avr" location="../build/linux/avr/bin" />
+	</else>
+	</if>
+	
 	<!-- property file -->
 	<fail message="FILE NOT FOUND: ${project.path}/build.properties">
     	<condition><not>
@@ -16,15 +29,13 @@
 	<xmlproperty file="${project.path}/build.properties" />
 		
 	<!-- paths -->
-	<property name="path.separator"     value="/" />
-	<property name="path.libraries"     value="." />
-	<property name="path.arduino_core"  value="../arduino/hardware/arduino/cores/arduino" />
-	<property name="path.avr"           value="../build/linux/avr/bin" />
-	<property name="path.gcc"  			value="${path.avr}/avr-gcc" />
-	<property name="path.copy" 			value="${path.avr}/avr-objcopy" />
-	<property name="path.output" 		value="${project.path}/output" />
-	<property name="path.arduinolib" 	value="Arduino/obj/atmega32u4.a" />
-	<property name="path.avrdude"   	value="../build/linux/avrdude" />
+	<property name="path.libraries"     location="." />
+	<property name="path.arduino_core"  location="../arduino/hardware/arduino/cores/arduino" />
+	<property name="path.gcc"  			location="${path.avr}/avr-gcc" />
+	<property name="path.copy" 			location="${path.avr}/avr-objcopy" />
+	<property name="path.output" 		location="${project.path}/output" />
+	<property name="path.arduinolib" 	location="Arduino/obj/atmega32u4.a" />
+	<property name="path.avrdude"   	location="../build/linux/avrdude" />
 
 	<!-- compiler/linker flags -->
 	<property name="compiler.cflags"    value="-c -g -Os -Wall -ffunction-sections -fdata-sections -mmcu=${project.mcu} ${project.cflags}"/>
@@ -39,12 +50,12 @@
 	<var name="compiler.includes" value="-I${path.arduino_core}" />
 	<for list="${project.dirs}" delimiter="," param="element">
 		<sequential>
-			<var name="compiler.includes" value="${compiler.includes} -I${project.path}/@{element} " />
+			<var name="compiler.includes" value="${compiler.includes} -I${project.path}${path.sep}@{element} " />
 		</sequential>
 	</for>
 	<for list="${project.libraries}" delimiter="," param="element">
 		<sequential>
-			<var name="compiler.includes" value="${compiler.includes} -I${path.libraries}/@{element} " />
+			<var name="compiler.includes" value="${compiler.includes} -I${path.libraries}${path.sep}@{element} " />
 		</sequential>
 	</for>
 	
@@ -64,10 +75,10 @@
 		   <echo message="${path.copy} -O ihex -R .eeprom ${path.output}/${project.name}.elf ${path.output}/${project.name}.hex" />
 		</then></if>
 
-		<exec executable="${path.copy}">
+		<exec executable="${path.copy}" failonerror="true">
     		<arg line="-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 ${path.output}/${project.name}.elf ${path.output}/${project.name}.eep" />
 		</exec>
-		<exec executable="${path.copy}">
+		<exec executable="${path.copy}" failonerror="true">
     		<arg line="-O ihex -R .eeprom ${path.output}/${project.name}.elf ${path.output}/${project.name}.hex" />
 		</exec>
 		<echo>Hex-File created</echo>
@@ -87,7 +98,7 @@
 		   <echo message="${path.gcc} ${compiler.linkflags} -o ${path.output}/${project.name}.elf ${path.output}/${objectlist} ${path.arduinolib}" />
 		</then></if>
 
-		<exec executable="${path.gcc}">
+		<exec executable="${path.gcc}" failonerror="true">
     		<arg line="${compiler.linkflags} -o ${path.output}/${project.name}.elf ${path.output}/${objectlist} ${path.arduinolib}" />
 		</exec>
 		<echo>Elf-File created</echo>
@@ -133,7 +144,7 @@
 		   <echo message="${path.gcc} ${compiler.cppflags} ${compiler.includes} -MMD ${inputFile} -o ${path.output}/${output}.o" />
 		</then></if>
 
-		<exec executable="${path.gcc}">
+		<exec executable="${path.gcc}" failonerror="true">
     		<arg line="${compiler.cppflags} ${compiler.includes} -MMD ${inputFile} -o ${path.output}/${output}.o" />
 		</exec>
 	</target>
@@ -143,7 +154,7 @@
 		   <echo message="${path.avrdude} ${avrdude.flags} ${avrdude.writeflash}" />
 		</then></if>
 
-		<exec executable="${path.avrdude}">
+		<exec executable="${path.avrdude}" failonerror="true">
     		<arg line="${avrdude.flags} ${avrdude.writeflash}" />
 		</exec>
 	</target>
