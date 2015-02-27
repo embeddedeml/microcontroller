@@ -8,7 +8,7 @@
 #ifndef KS0070_KS0070_H_
 #define KS0070_KS0070_H_
 
-#include "StdDef.h"
+#include "BaseDef.h"
 
 /* ----------------- Defines ----------------- */
 

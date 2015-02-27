@@ -8,7 +8,7 @@
 #ifndef DIO_DIO_H_
 #define DIO_DIO_H_
 
-#include "StdDef.h"
+#include "BaseDef.h"
 #include "Dio_Cfg.h"
 
 void digitalWrite(uint8_t, uint8_t);

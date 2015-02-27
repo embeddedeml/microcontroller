@@ -8,7 +8,7 @@
 #ifndef SCHEDULER_H_
 #define SCHEDULER_H_
 
-#include "StdDef.h"
+#include "BaseDef.h"
 #include "Scheduler_Cfg.h"
 
 #ifndef SCHEDULER_CFG_NROFTASKS

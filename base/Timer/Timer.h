@@ -8,7 +8,7 @@
 #ifndef TIMER_TIMER_H_
 #define TIMER_TIMER_H_
 
-#include "StdDef.h"
+#include "BaseDef.h"
 
 extern void Timer_Timer1_CHA_Interrupt(void);
 extern void timer1_init(void);

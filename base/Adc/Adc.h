@@ -8,7 +8,7 @@
 #ifndef ADC_ADC_H_
 #define ADC_ADC_H_
 
-#include "StdDef.h"
+#include "BaseDef.h"
 #include "Adc_Cfg.h"
 
 void Adc_init(void);

@@ -10,7 +10,7 @@
 #ifndef _TWIM
 #define _TWIM
 
-#include "StdDef.h"
+#include "BaseDef.h"
 
 #define E_TWI_INIT	  	1
 #define E_TWI_START 	2

@@ -8,7 +8,7 @@
 #ifndef DS18B20_DS18B20_H_
 #define DS18B20_DS18B20_H_
 
-#include "StdDef.h"
+#include "BaseDef.h"
 
 /* ----------------- Defines ----------------- */
 
