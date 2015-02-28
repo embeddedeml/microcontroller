@@ -7,17 +7,17 @@
 
 	<property name="debug" value="false" />
 	
-	<!-- OS -->
+	<!-- properties depending on OS-->
 	<if>
-		<equals arg1="${ostype}" arg2="win" />
+		<equals arg1="${os.name}" arg2="Linux" />
 		<then>
-			<property name="path.sep" value="\" />
-			<property name="path.avr" location="../build/win/avr/bin" />
-		</then>
-		<else>
 			<property name="path.sep" value="/" />
 			<property name="path.avr" location="../build/linux/avr/bin" />
-	</else>
+		</then>
+		<else>
+			<property name="path.sep" value="\" />
+			<property name="path.avr" location="../build/win/avr/bin" />	
+		</else>
 	</if>
 	
 	<!-- property file -->

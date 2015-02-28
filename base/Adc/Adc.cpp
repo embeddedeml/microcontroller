@@ -2,108 +2,134 @@
  * Adc.cpp
  *
  *  Created on: Feb 5, 2015
- *      Author: mepping
  */
 
 #include "Adc.h"
 
-uint8_t Adc_currentChannel;
-uint16_t *Adc_resultBuffer;
+/* @var Channel number, which is currently converted */
+static uint8_t Adc_CurrentChannel;
+/* @var Pointer to result buffer provided by application */
+static uint16_t *Adc_ResultBuffer;
 
-uint8_t Adc_muxValues[ADC_CFG_NROFCHANNELS + 1] =
+/* @var Array with values for mux register (only active channels) */
+static uint8_t Adc_MuxValues[ADC_CFG_NROFCHANNELS + 1] =
 {
 #if (ADC_CFG_CHANNEL_0 == STD_ON)
-	0x00U,
+        0x00U,
 #endif
 #if (ADC_CFG_CHANNEL_1 == STD_ON)
-	0x01U,
+        0x01U,
 #endif
 #if (ADC_CFG_CHANNEL_4 == STD_ON)
-	0x04U,
+        0x04U,
 #endif
 #if (ADC_CFG_CHANNEL_5 == STD_ON)
-	0x05U,
+        0x05U,
 #endif
 #if (ADC_CFG_CHANNEL_6 == STD_ON)
-	0x06U,
+        0x06U,
 #endif
 #if (ADC_CFG_CHANNEL_7 == STD_ON)
-	0x07U,
+        0x07U,
 #endif
 #if (ADC_CFG_CHANNEL_8 == STD_ON)
-	0x80U,
+        0x80U,
 #endif
 #if (ADC_CFG_CHANNEL_9 == STD_ON)
-	0x81U,
+        0x81U,
 #endif
 #if (ADC_CFG_CHANNEL_10 == STD_ON)
-	0x82U,
+        0x82U,
 #endif
 #if (ADC_CFG_CHANNEL_11 == STD_ON)
-	0x83U,
+        0x83U,
 #endif
 #if (ADC_CFG_CHANNEL_12 == STD_ON)
-	0x84U,
+        0x84U,
 #endif
 #if (ADC_CFG_CHANNEL_13 == STD_ON)
-	0x85U,
+        0x85U,
 #endif
-	0x00U /* dummy */
+        0x00U /* dummy */
 };
 
-void Adc_init(void)
+/**
+ * @brief Initializes Adc hardware unit and starts dummy conversion
+ */
+void Adc_Init(void)
 {
-	ADMUX = (ADC_CFG_REF << REFS0); /* Reference Voltage, Channel0 */
+    ADMUX = (ADC_CFG_REF << REFS0); /* Reference Voltage, Channel0 */
 
-	ADCSRA = ((1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0)); /* Prescaler */
-	ADCSRA |= (1<<ADEN); /* Enable ADC */
+    ADCSRA = ((1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0)); /* Prescaler */
+    ADCSRA |= (1 << ADEN); /* Enable ADC */
 
-	ADCSRA |= (1<<ADSC); /* dummy conversion */
-	while((ADCSRA & (1<<ADSC)) > 0x00U);
+    ADCSRA |= (1 << ADSC); /* dummy conversion */
+    while((ADCSRA & (1 << ADSC)) > 0x00U)
+        ;
 
-	Adc_currentChannel = ADC_CFG_NROFCHANNELS;
+    Adc_CurrentChannel = ADC_CFG_NROFCHANNELS;
 }
 
-StdReturnType Adc_startConversion(uint16_t *resultBuffer)
+/**
+ * @brief Starts conversion of all configured channels
+ *
+ * @param   resultBuffer    Pointer to result buffer. Must be large enough for results of all channels
+ *
+ * @return  E_OK            Conversion started
+ * @return  E_NOT_OK        Adc not initialized or previous conversion not finished
+ */
+StdReturnType Adc_StartConversion(uint16_t *resultBuffer)
 {
-	uint8_t retVal = E_NOT_OK;
+    uint8_t retVal = E_NOT_OK;
 
-	if(Adc_currentChannel == ADC_CFG_NROFCHANNELS)
-	{
-		Adc_currentChannel = 0x00U;
-		Adc_resultBuffer   = resultBuffer;
-		ADMUX   = ((ADC_CFG_REF << REFS0) | (Adc_muxValues[Adc_currentChannel]));
-		ADCSRA |= ((1<<ADSC) | (1<<ADIE)); /* Start conversion, enable interrupt */
-		retVal  = E_OK;
-	}
+    if(Adc_CurrentChannel == ADC_CFG_NROFCHANNELS)
+    {
+        Adc_CurrentChannel = 0x00U;
+        Adc_ResultBuffer = resultBuffer;
+        ADMUX = ((ADC_CFG_REF << REFS0) | (Adc_MuxValues[Adc_CurrentChannel]));
+        ADCSRA |= ((1 << ADSC) | (1 << ADIE)); /* Start conversion, enable interrupt */
+        retVal = E_OK;
+    }
 
-	return retVal;
+    return retVal;
 }
 
-Boolean Adc_conversionFinished(void)
+/**
+ * @brief Returns status of conversion
+ *
+ * @return  TRUE    conversion finished
+ * @return  FALSE   conversion not finished
+ */
+Boolean Adc_ConversionFinished(void)
 {
-	Boolean retVal = false;
-	if(Adc_currentChannel == ADC_CFG_NROFCHANNELS)
-	{
-		retVal = true;
-	}
+    Boolean retVal = false;
+    if(Adc_CurrentChannel == ADC_CFG_NROFCHANNELS)
+    {
+        retVal = true;
+    }
 
-	return retVal;
+    return retVal;
 }
 
+/**
+ * @brief Adc conversion finished interrupt
+ *
+ * New conversion is started automatically until all channels
+ * are processed.
+ */
 ISR(ADC_vect)
 {
-	uint16_t result;
-	result  = ADCL;
-	result += (ADCH<<8);
+    uint16_t result;
+    result = ADCL;
+    result += (ADCH<<8);
 
-	*Adc_resultBuffer = result;
+    *Adc_ResultBuffer = result;
 
-	Adc_currentChannel++;
-	if(Adc_currentChannel < ADC_CFG_NROFCHANNELS)
-	{
-		Adc_resultBuffer++;
-		ADMUX   = ((ADC_CFG_REF << REFS0) | (Adc_muxValues[Adc_currentChannel]));
-		ADCSRA |= (1<<ADSC);
-	}
+    Adc_CurrentChannel++;
+    if(Adc_CurrentChannel < ADC_CFG_NROFCHANNELS)
+    {
+        Adc_ResultBuffer++;
+        ADMUX = ((ADC_CFG_REF << REFS0) | (Adc_MuxValues[Adc_CurrentChannel]));
+        ADCSRA |= (1<<ADSC);
+    }
 }

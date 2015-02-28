@@ -2,11 +2,10 @@
  * Dio_Cfg.h
  *
  *  Created on: Nov 2, 2014
- *      Author: mepping
  */
 
-#ifndef CURRENTSENSOR2_CFG_DIO_CFG_H_
-#define CURRENTSENSOR2_CFG_DIO_CFG_H_
+#ifndef CFG_DIO_CFG_H_
+#define CFG_DIO_CFG_H_
 
 /*
  * High nibble: Port
@@ -45,4 +44,4 @@
 
 #endif
 
-#endif /* CURRENTSENSOR2_CFG_DIO_CFG_H_ */
+#endif /* CFG_DIO_CFG_H_ */

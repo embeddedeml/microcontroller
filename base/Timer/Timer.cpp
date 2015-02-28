@@ -2,7 +2,6 @@
  * Timer.cpp
  *
  *  Created on: Nov 2, 2014
- *      Author: mepping
  */
 
 #include "Timer.h"
@@ -12,7 +11,10 @@
 #error "Invalid configuration for timer1"
 #endif
 
-extern void timer1_init(void)
+/**
+ * @brief Initializes hardware timer 1
+ */
+void Timer_Timer1_Init(void)
 {
 	TCCR1A = 0;
 	TCCR1B = (1 << WGM12) | (1 << CS10); /* prescaler: 1 ; CTC Mode */
@@ -21,7 +23,10 @@ extern void timer1_init(void)
     TIMSK1 = (1 << OCIE1A);
 }
 
+/**
+ * @brief Timer 1 overflow interrupt
+ */
 ISR (TIMER1_COMPA_vect)
 {
-	Timer_Timer1_CHA_Interrupt();
+	Timer_Timer1_Interrupt();
 }

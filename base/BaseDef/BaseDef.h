@@ -2,7 +2,6 @@
  * base.h
  *
  *  Created on: Nov 2, 2014
- *      Author: mepping
  */
 
 #ifndef BASE_H_
@@ -22,7 +21,7 @@
 #define STD_ON	(0x01)
 
 #define TRUE 	(0x01)
-#define false 	(0x00)
+#define FALSE 	(0x00)
 
 #define E_OK        (0x00)
 #define E_NOT_OK    (0x01)

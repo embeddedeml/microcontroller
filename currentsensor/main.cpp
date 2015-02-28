@@ -1,8 +1,7 @@
 /*
- * blink.c
+ * main.cpp
  *
  *  Created on: Oct 25, 2014
- *      Author: mepping
  */
 
 #include "BaseDef.h"
@@ -16,8 +15,7 @@
 Scheduler scheduler;
 KS0070 ks0070;
 
-uint16_t Main_Adc_resultbuffer[ADC_CFG_NROFCHANNELS];
-uint8_t switchState;
+uint16_t Main_Adc_Resultbuffer[ADC_CFG_NROFCHANNELS];
 
 void led_on(void)
 {
@@ -31,57 +29,31 @@ void led_off(void)
 
 void startConversion(void)
 {
-	if(Adc_startConversion(Main_Adc_resultbuffer) != E_OK)
+	if(Adc_StartConversion(Main_Adc_Resultbuffer) != E_OK)
 	{
 		Serial.println("Start conversion failed");
 	}
 }
 
-void switchSwitch(void)
-{
-	pinMode(PIN_LCD, INPUT);
-	pinMode(PIN_OW,  INPUT);
-	digitalWrite(PIN_SD, LOW);
-
-	if(switchState == 0x00)
-	{
-		switchState++;
-		pinMode(PIN_LCD, OUTPUT);
-		Serial.println("LCD: on");
-	}
-	else if(switchState == 0x01)
-	{
-		switchState++;
-		pinMode(PIN_OW, OUTPUT);
-		Serial.println("OW: on");
-	}
-	else
-	{
-		switchState=0;
-		digitalWrite(PIN_SD, HIGH);
-		Serial.println("SD: on");
-	}
-}
-
 void getValue(void)
 {
-	if(Adc_conversionFinished() == true)
+	if(Adc_ConversionFinished() == true)
 	{
 		ks0070.clearDisplay();
 		ks0070.returnCursor();
 
-		ks0070.writeNumber(Main_Adc_resultbuffer[0]);
+		ks0070.writeNumber(Main_Adc_Resultbuffer[0]);
 		ks0070.writeByte('-');
-		ks0070.writeNumber(Main_Adc_resultbuffer[1]);
+		ks0070.writeNumber(Main_Adc_Resultbuffer[1]);
 		ks0070.writeByte('-');
-		ks0070.writeNumber(Main_Adc_resultbuffer[2]);
+		ks0070.writeNumber(Main_Adc_Resultbuffer[2]);
 
 		Serial.print("Ubat: ");
-		Serial.print(Main_Adc_resultbuffer[0]);
+		Serial.print(Main_Adc_Resultbuffer[0]);
 		Serial.print(" - Icharge: ");
-		Serial.print(Main_Adc_resultbuffer[1]);
+		Serial.print(Main_Adc_Resultbuffer[1]);
 		Serial.print(" - Idischarge: ");
-		Serial.println(Main_Adc_resultbuffer[2]);
+		Serial.println(Main_Adc_Resultbuffer[2]);
 	}
 	else
 	{
@@ -89,6 +61,10 @@ void getValue(void)
 	}
 }
 
+/**
+ *
+ * @return
+ */
 int main(void)
 {
 	sei();
@@ -117,13 +93,10 @@ int main(void)
 	scheduler.enableTask(1, 500,  1000,  &led_off);
 	scheduler.enableTask(2,  50,  1000,  &startConversion);
 	scheduler.enableTask(3, 550,  1000,  &getValue);
-	scheduler.enableTask(4,   0,  3000,  &switchSwitch);
 
-	timer1_init();
-	Adc_init();
+	Timer_Timer1_Init();
+	Adc_Init();
 	ks0070.init();
-
-	switchState=0;
 
 	while(1)
 	{
@@ -131,7 +104,7 @@ int main(void)
 	}
 }
 
-void Timer_Timer1_CHA_Interrupt(void)
+void Timer_Timer1_Interrupt(void)
 {
 	scheduler.incrementTicks();
 }

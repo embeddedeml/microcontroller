@@ -2,7 +2,6 @@
  * Adc_Cfg.h
  *
  *  Created on: Feb 5, 2015
- *      Author: mepping
  */
 
 #ifndef CFG_ADC_CFG_H_
