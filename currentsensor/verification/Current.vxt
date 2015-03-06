@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--Vector Test Automation Editor 2.1.34.0-->
+<testmodule title="Current" version="1.0" xmlns="http://www.vector-informatik.de/CANoe/TestModule/1.27">
+  <templates>
+    <testcasetemplate name="ConstantCurrent">
+      <paramdef name="wait" />
+      <paramdef name="load" />
+      <set title="Set configured load">
+        <sysvar name="IntLoadCurrent" namespace="VTS::Sensor">$load$</sysvar>
+      </set>
+      <set title="Switch on load-module">
+        <sysvar name="RelayIntLoadB" namespace="VTS::Sensor">1</sysvar>
+        <sysvar name="RelayIntLoadA" namespace="VTS::Sensor">1</sysvar>
+      </set>
+      <wait title="Wait configured time" time="$wait$" />
+      <completion>
+        <set title="Switch off load-module">
+          <sysvar name="RelayIntLoadB" namespace="VTS::Sensor">0</sysvar>
+          <sysvar name="RelayIntLoadA" namespace="VTS::Sensor">0</sysvar>
+        </set>
+        <wait title="Wait 3s" time="3s" />
+      </completion>
+    </testcasetemplate>
+  </templates>
+  <preparation>
+    <set title="Switch on supply voltage">
+      <sysvar name="Active" namespace="VTS::Sensor_Supply">1</sysvar>
+    </set>
+    <wait title="Wait for startup" time="10s" />
+  </preparation>
+  <testgroup title="Ramping">
+    <templateinstances template="ConstantCurrent">
+      <testcaseinstance title="100mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">0.1</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="200mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">0.2</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="300mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">0.3</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="400mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">0.4</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="500mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">0.5</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="600mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">0.6</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="700mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">0.7</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="800mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">0.8</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="900mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">0.9</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="1000mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">1.0</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="1100mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">1.1</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="1200mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">1.2</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="1300mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">1.3</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="1400mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">1.4</paramvalue>
+      </testcaseinstance>
+      <testcaseinstance title="1500mA - 10s" ident="">
+        <paramvalue name="wait">10s</paramvalue>
+        <paramvalue name="load">1.5</paramvalue>
+      </testcaseinstance>
+    </templateinstances>
+  </testgroup>
+  <completion>
+    <set title="Switch off supply voltage">
+      <sysvar name="Active" namespace="VTS::Sensor_Supply">0</sysvar>
+    </set>
+  </completion>
+</testmodule>
