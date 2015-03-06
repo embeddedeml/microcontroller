@@ -11,12 +11,19 @@
 	<if>
 		<equals arg1="${os.name}" arg2="Linux" />
 		<then>
-			<property name="path.sep" value="/" />
-			<property name="path.avr" location="../build/linux/avr/bin" />
+			<property name="path.sep"            value="/" />
+			<property name="path.avr"            location="../build/linux/avr/bin" />
+	      	<property name="path.avrdude"        location="../build/linux/avrdude" />
+      		<property name="path.avrdudeconfig"  location="../build/linux/avrdude.conf" />
+      		<property name="avrdude.port"        value="/dev/ttyACM0" />
 		</then>
 		<else>
-			<property name="path.sep" value="\" />
-			<property name="path.avr" location="../build/win/avr/bin" />	
+			<property name="path.sep"            value="\" />
+			<property name="path.avr"            location="../build/win/avr/bin" />	
+      		<property name="path.avrdude"        location="../build/win/avr/bin/avrdude" />
+      		<property name="path.avrdudeconfig"  location="../build/win/avr/etc/avrdude.conf" />
+      		<property name="path.console"        location="../build/win/putty.exe" />
+      		<property name="console.flags"       value="-serial ${avrdude.port}" />
 		</else>
 	</if>
 	
@@ -35,7 +42,6 @@
 	<property name="path.copy" 			location="${path.avr}/avr-objcopy" />
 	<property name="path.output" 		location="${project.path}/output" />
 	<property name="path.arduinolib" 	location="Arduino/obj/atmega32u4.a" />
-	<property name="path.avrdude"   	location="../build/linux/avrdude" />
 
 	<!-- compiler/linker flags -->
 	<property name="compiler.cflags"    value="-c -g -Os -Wall -ffunction-sections -fdata-sections -mmcu=${project.mcu} ${project.cflags}"/>
@@ -43,8 +49,8 @@
 	<property name="compiler.linkflags" value="-Os -Wl,--gc-sections -mmcu=${project.mcu} -L${path.output} -lm"/>
 
 	<!-- avrdude flags -->
-	<property name="avrdude.flags"    value="-F -p ${project.mcu} -P /dev/ttyACM0 -c avr109 -b 19200 -C ../build/linux/avrdude.conf" />
-	<property name="avrdude.writeflash"    value="-U flash:w:${path.output}/${project.name}.hex" />
+  <property name="avrdude.flags" value="-F -p ${project.mcu} -P ${avrdude.port} -c avr109 -b 19200 -C ${path.avrdudeconfig}" />
+	<property name="avrdude.writeflash"    value="-U flash:w:${project.name}.hex" />
 
 	<!-- include paths -->
 	<var name="compiler.includes" value="-I${path.arduino_core}" />
@@ -149,14 +155,24 @@
 		</exec>
 	</target>
 
-	<target name="deploy" depends="all">
+	<target name="deploy">
 		<if><equals arg1="${debug}" arg2="true" /><then>
 		   <echo message="${path.avrdude} ${avrdude.flags} ${avrdude.writeflash}" />
 		</then></if>
 
-		<exec executable="${path.avrdude}" failonerror="true">
+		<exec executable="${path.avrdude}" failonerror="true" dir="${path.output}">
     		<arg line="${avrdude.flags} ${avrdude.writeflash}" />
 		</exec>
 	</target>
 
+  <target name="port">
+		<echo>${avrdude.port}</echo>
+	</target>
+  
+  <target name="console">
+		<exec executable="${path.console}" failonerror="true">
+    		<arg line="${console.flags}" />
+		</exec>
+	</target>
+  
 </project>
