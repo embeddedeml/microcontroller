@@ -14,4 +14,7 @@ void Adc_Init(void);
 StdReturnType Adc_StartConversion(uint16_t *resultBuffer);
 Boolean Adc_ConversionFinished(void);
 
+/* Callback */
+void Adc_ConversionFinished_Indication(void);
+
 #endif /* ADC_ADC_H_ */

@@ -6,6 +6,11 @@
 
 #include "Adc.h"
 
+#define ADC_STATUS_IDLE (0U)
+#define ADC_STATUS_BUSY (1U)
+
+/* @var Current status of adc */
+static uint8_t Adc_Status;
 /* @var Channel number, which is currently converted */
 static uint8_t Adc_CurrentChannel;
 /* @var Pointer to result buffer provided by application */
@@ -58,16 +63,18 @@ static uint8_t Adc_MuxValues[ADC_CFG_NROFCHANNELS + 1] =
  */
 void Adc_Init(void)
 {
-    ADMUX = (ADC_CFG_REF << REFS0); /* Reference Voltage, Channel0 */
+    Adc_Status = ADC_STATUS_BUSY;
 
-    ADCSRA = ((1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0)); /* Prescaler */
+    ADMUX   = (ADC_CFG_REF << REFS0); /* Reference Voltage, Channel0 */
+    ADCSRA  = ((1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0)); /* Prescaler: 128 */
     ADCSRA |= (1 << ADEN); /* Enable ADC */
-
     ADCSRA |= (1 << ADSC); /* dummy conversion */
+
     while((ADCSRA & (1 << ADSC)) > 0x00U)
         ;
 
-    Adc_CurrentChannel = ADC_CFG_NROFCHANNELS;
+    Adc_CurrentChannel = 0x00U;
+    Adc_Status = ADC_STATUS_IDLE;
 }
 
 /**
@@ -80,14 +87,17 @@ void Adc_Init(void)
  */
 StdReturnType Adc_StartConversion(uint16_t *resultBuffer)
 {
-    uint8_t retVal = E_NOT_OK;
+    StdReturnType retVal = E_NOT_OK;
 
-    if(Adc_CurrentChannel == ADC_CFG_NROFCHANNELS)
+    if(Adc_Status == ADC_STATUS_IDLE)
     {
+        Adc_Status = ADC_STATUS_BUSY;
+
         Adc_CurrentChannel = 0x00U;
-        Adc_ResultBuffer = resultBuffer;
-        ADMUX = ((ADC_CFG_REF << REFS0) | (Adc_MuxValues[Adc_CurrentChannel]));
+        Adc_ResultBuffer   = resultBuffer;
+        ADMUX   = ((ADC_CFG_REF << REFS0) | (Adc_MuxValues[Adc_CurrentChannel]));
         ADCSRA |= ((1 << ADSC) | (1 << ADIE)); /* Start conversion, enable interrupt */
+
         retVal = E_OK;
     }
 
@@ -103,7 +113,7 @@ StdReturnType Adc_StartConversion(uint16_t *resultBuffer)
 Boolean Adc_ConversionFinished(void)
 {
     Boolean retVal = false;
-    if(Adc_CurrentChannel == ADC_CFG_NROFCHANNELS)
+    if(Adc_Status == ADC_STATUS_IDLE)
     {
         retVal = true;
     }
@@ -131,5 +141,10 @@ ISR(ADC_vect)
         Adc_ResultBuffer++;
         ADMUX = ((ADC_CFG_REF << REFS0) | (Adc_MuxValues[Adc_CurrentChannel]));
         ADCSRA |= (1<<ADSC);
+    }
+    else
+    {
+        Adc_ConversionFinished_Indication();
+        Adc_Status = ADC_STATUS_IDLE;
     }
 }
