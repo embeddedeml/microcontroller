@@ -35,8 +35,8 @@ public:
     Scheduler();
     void init(void);
     void incrementTicks(void);
-    uint8_t enableTask(uint8_t id, uint16_t offset, uint16_t period, FunctionPointer callback);
-    uint8_t disableTask(uint8_t id);
+    StdReturnType enableTask(uint8_t id, uint16_t offset, uint16_t period, FunctionPointer callback);
+    StdReturnType disableTask(uint8_t id);
     void run(void);
 
 private:

@@ -63,9 +63,9 @@ void Scheduler::incrementTicks(void)
  * @return E_OK     Task enabled
  * @return E_NOT_OK Task ID not found
  */
-uint8_t Scheduler::enableTask(uint8_t id, uint16_t offset, uint16_t period, FunctionPointer callback)
+StdReturnType Scheduler::enableTask(uint8_t id, uint16_t offset, uint16_t period, FunctionPointer callback)
 {
-    uint8_t retVal;
+    StdReturnType retVal;
 
     if(id < SCHEDULER_CFG_NROFTASKS)
     {
@@ -92,9 +92,9 @@ uint8_t Scheduler::enableTask(uint8_t id, uint16_t offset, uint16_t period, Func
  * @return E_OK     Task disabled
  * @return E_NOT_OK Task ID not found
  */
-uint8_t Scheduler::disableTask(uint8_t id)
+StdReturnType Scheduler::disableTask(uint8_t id)
 {
-    uint8_t retVal;
+    StdReturnType retVal;
 
     if(id < SCHEDULER_CFG_NROFTASKS)
     {
