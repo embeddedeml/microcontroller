@@ -18,7 +18,7 @@ $AllArgs = @('-classpath', '"../build/ant/lib/ant-launcher.jar"',
              '-Dant.library.dir="../build/ant/lib"', 
              'org.apache.tools.ant.launch.Launcher',
              "-Dproject.path=`"..\$project`"",
-             "-Davrdude.port=`"$port`"",
+             "-Dport=`"$port`"",
              $target)
  
 & 'java' $AllArgs

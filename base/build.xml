@@ -13,15 +13,18 @@
 		<then>
 			<property name="path.sep"            value="/" />
 			<property name="path.avr"            location="../build/linux/avr/bin" />
-	      	<property name="path.avrdude"        location="../build/linux/avrdude" />
-      		<property name="path.avrdudeconfig"  location="../build/linux/avrdude.conf" />
+	      	<property name="path.avrdude"        location="../build/linux/avr/bin/avrdude" />
+      		<property name="path.avrdudeconfig"  location="../build/linux/avr/etc/avrdude.conf" />
       		<property name="avrdude.port"        value="/dev/ttyACM0" />
+      		<property name="path.console"        location="/bin/cat" />
+            <property name="console.flags"       value="${avrdude.port}" />
 		</then>
 		<else>
 			<property name="path.sep"            value="\" />
 			<property name="path.avr"            location="../build/win/avr/bin" />	
       		<property name="path.avrdude"        location="../build/win/avr/bin/avrdude" />
       		<property name="path.avrdudeconfig"  location="../build/win/avr/etc/avrdude.conf" />
+      		<property name="avrdude.port"        value="${port}" />
       		<property name="path.console"        location="../build/win/putty.exe" />
       		<property name="console.flags"       value="-serial ${avrdude.port}" />
 		</else>
