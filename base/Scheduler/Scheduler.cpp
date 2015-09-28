@@ -35,14 +35,14 @@ void Scheduler::incrementTicks(void)
 
     for(task = 0; task < SCHEDULER_CFG_NROFTASKS; task++)
     {
-        if(this->Tasks[task].state != SCHEDULER_STATE_DISABLED)
+        if(this->Tasks[task].state == SCHEDULER_STATE_IDLE)
         {
             if(this->Tasks[task].timer > 0x00U)
             {
                 /* timer is running, decrement timer */
                 this->Tasks[task].timer--;
-
-            } else
+            }
+            else
             {
                 /* timer expired, reload timer and schedule for execution */
                 this->Tasks[task].timer = this->Tasks[task].timerPeriod;
@@ -71,7 +71,7 @@ StdReturnType Scheduler::enableTask(uint8_t id, uint16_t offset, uint16_t period
     {
         this->Tasks[id].state = SCHEDULER_STATE_DISABLED;
 
-        this->Tasks[id].timerPeriod = SCHEDULER_MS_IN_TICKS(period);
+        this->Tasks[id].timerPeriod = period;
         this->Tasks[id].timer = offset;
         this->Tasks[id].callback = callback;
         this->Tasks[id].state = SCHEDULER_STATE_IDLE;
@@ -119,8 +119,8 @@ void Scheduler::run(void)
     {
         if(this->Tasks[task].state == SCHEDULER_STATE_SCHEDULED)
         {
-            this->Tasks[task].state = SCHEDULER_STATE_IDLE;
             this->Tasks[task].callback();
+            this->Tasks[task].state = SCHEDULER_STATE_IDLE;
         }
     }
 }

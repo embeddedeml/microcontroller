@@ -43,6 +43,7 @@
 	<property name="path.arduino_core"  location="../arduino/hardware/arduino/cores/arduino" />
 	<property name="path.gcc"  			location="${path.avr}/avr-gcc" />
 	<property name="path.copy" 			location="${path.avr}/avr-objcopy" />
+	<property name="path.size"          location="${path.avr}/avr-size" />
 	<property name="path.output" 		location="${project.path}/output" />
 	<property name="path.arduinolib" 	location="Arduino/obj/atmega32u4.a" />
 
@@ -69,7 +70,7 @@
 	</for>
 	
 	<!-- targets --> 
-	<target name="all" depends="clean, hex">
+	<target name="all" depends="clean, size">
 		<echo>Build complete</echo>
 	</target>
 
@@ -78,6 +79,12 @@
 		<mkdir dir="${path.output}" />
 		<echo>Project cleaned</echo>
 	</target>
+	
+   <target name="size" depends="hex">
+        <exec executable="${path.size}" failonerror="true">
+            <arg line="-C --mcu=${project.mcu} ${path.output}/${project.name}.elf" />
+        </exec> 
+    </target>
 
 	<target name="hex" depends="elf">
 		<if><equals arg1="${debug}" arg2="true" /><then>

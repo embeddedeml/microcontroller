@@ -14,11 +14,18 @@
 #error "SCHEDULER_CFG_NROFTASKS not defined"
 #endif
 
-#ifndef SCHEDULER_CFG_US_PER_TICK
-#error "SCHEDULER_CFG_US_PER_TICK not defined"
+#ifdef SCHEDULER_CFG_US_PER_TICK
+#define SCHEDULER_US_IN_TICKS(us) (us/SCHEDULER_CFG_US_PER_TICK)
 #endif
 
-#define SCHEDULER_MS_IN_TICKS(ms) (ms/(SCHEDULER_CFG_US_PER_TICK/1000))
+#ifdef SCHEDULER_CFG_MS_PER_TICK
+#define SCHEDULER_MS_IN_TICKS(ms) (ms/SCHEDULER_CFG_MS_PER_TICK)
+#endif
+
+#ifdef SCHEDULER_CFG_S_PER_TICK
+#define SCHEDULER_S_IN_TICKS(s) (us/SCHEDULER_CFG_S_PER_TICK)
+#endif
+
 
 typedef void (*FunctionPointer)();
 struct Scheduler_Tasks_t

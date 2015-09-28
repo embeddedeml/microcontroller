@@ -13,6 +13,8 @@
 static uint8_t Adc_Status;
 /* @var Channel number, which is currently converted */
 static uint8_t Adc_CurrentChannel;
+/* @var Number of iteration, if multiple conversion is running */
+static uint8_t Adc_CurrentSample;
 /* @var Pointer to result buffer provided by application */
 static uint16_t *Adc_ResultBuffer;
 
@@ -74,18 +76,20 @@ void Adc_Init(void)
         ;
 
     Adc_CurrentChannel = 0x00U;
+    Adc_CurrentSample  = 0x00U;
     Adc_Status = ADC_STATUS_IDLE;
 }
 
 /**
  * @brief Starts conversion of all configured channels
  *
- * @param   resultBuffer    Pointer to result buffer. Must be large enough for results of all channels
+ * @param   resultBuffer    Pointer to result buffer. Must be large enough for results of all channels and all samples
+ * @param   count           Number of samples (of each channel)
  *
  * @return  E_OK            Conversion started
  * @return  E_NOT_OK        Adc not initialized or previous conversion not finished
  */
-StdReturnType Adc_StartConversion(uint16_t *resultBuffer)
+StdReturnType Adc_StartConversion(uint16_t *resultBuffer, uint8_t count)
 {
     StdReturnType retVal = E_NOT_OK;
 
@@ -94,7 +98,9 @@ StdReturnType Adc_StartConversion(uint16_t *resultBuffer)
         Adc_Status = ADC_STATUS_BUSY;
 
         Adc_CurrentChannel = 0x00U;
+        Adc_CurrentSample  = count;
         Adc_ResultBuffer   = resultBuffer;
+
         ADMUX   = ((ADC_CFG_REF << REFS0) | (Adc_MuxValues[Adc_CurrentChannel]));
         ADCSRA |= ((1 << ADSC) | (1 << ADIE)); /* Start conversion, enable interrupt */
 
@@ -142,9 +148,20 @@ ISR(ADC_vect)
         ADMUX = ((ADC_CFG_REF << REFS0) | (Adc_MuxValues[Adc_CurrentChannel]));
         ADCSRA |= (1<<ADSC);
     }
+    else if(Adc_CurrentSample > 0x01U)
+    {
+        /* start new iteration */
+        Adc_ResultBuffer++;
+        Adc_CurrentSample--;
+        Adc_CurrentChannel = 0x00U;
+
+        ADMUX = ((ADC_CFG_REF << REFS0) | (Adc_MuxValues[Adc_CurrentChannel]));
+        ADCSRA |= (1<<ADSC);
+    }
     else
     {
-        Adc_ConversionFinished_Indication();
+        /* last iteration finished */
         Adc_Status = ADC_STATUS_IDLE;
+        Adc_ConversionFinished_Indication();
     }
 }
