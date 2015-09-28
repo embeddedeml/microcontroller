@@ -33,15 +33,13 @@
 #define PIN_KS0070_DB6	(0x26) /* PC6 - D5 */
 #define PIN_KS0070_DB7	(0x34) /* PD4 - D4 */
 
+#define PIN_DO  (0x13) /* PB3 - DO/MISO */
+#define PIN_CK  (0x11) /* PB1 - CLK/SCK */
+#define PIN_DI  (0x12) /* PB2 - DI/MOSI */
+#define PIN_CS  (0x10) /* PB0 - CS/SS   */
 
 #if 0
-#define SS   (0x10) /* PB0 */
-#define MOSI (0x12) /* PB2 */
-#define MISO (0x13) /* PB3 */
-#define SCK  (0x11) /* PB1 */
-
 #define PIN_DS18B20 (0x46) /* PE6 */
-
 #endif
 
 #endif /* CFG_DIO_CFG_H_ */
