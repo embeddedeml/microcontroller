@@ -37,7 +37,7 @@ void Scheduler::incrementTicks(void)
     {
         if(this->Tasks[task].state == SCHEDULER_STATE_IDLE)
         {
-            if(this->Tasks[task].timer > 0x00U)
+            if(this->Tasks[task].timer > 0x01U)
             {
                 /* timer is running, decrement timer */
                 this->Tasks[task].timer--;
