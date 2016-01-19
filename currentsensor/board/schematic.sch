@@ -15434,8 +15434,8 @@ Source: 008-0260-0_E.pdf</description>
 <instance part="R11" gate="G$1" x="119.38" y="-7.62" rot="R270"/>
 <instance part="C3" gate="G$1" x="-27.94" y="106.68"/>
 <instance part="C4" gate="G$1" x="-20.32" y="106.68"/>
-<instance part="I2C" gate="G$1" x="226.06" y="-109.22" rot="R180"/>
-<instance part="GND17" gate="1" x="215.9" y="-119.38"/>
+<instance part="I2C" gate="G$1" x="231.14" y="-106.68" rot="R180"/>
+<instance part="GND17" gate="1" x="220.98" y="-119.38"/>
 <instance part="R14" gate="G$1" x="208.28" y="-91.44" rot="R270"/>
 <instance part="R17" gate="G$1" x="218.44" y="-91.44" rot="R270"/>
 <instance part="U$3" gate="G$1" x="193.04" y="93.98"/>
@@ -15533,8 +15533,8 @@ Source: 008-0260-0_E.pdf</description>
 </segment>
 <segment>
 <pinref part="I2C" gate="G$1" pin="3"/>
-<wire x1="218.44" y1="-111.76" x2="215.9" y2="-111.76" width="0.1524" layer="91"/>
-<wire x1="215.9" y1="-111.76" x2="215.9" y2="-116.84" width="0.1524" layer="91"/>
+<wire x1="223.52" y1="-109.22" x2="220.98" y2="-109.22" width="0.1524" layer="91"/>
+<wire x1="220.98" y1="-109.22" x2="220.98" y2="-116.84" width="0.1524" layer="91"/>
 <pinref part="GND17" gate="1" pin="GND"/>
 </segment>
 <segment>
@@ -16024,18 +16024,18 @@ Source: 008-0260-0_E.pdf</description>
 <label x="-15.24" y="5.08" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="I2C" gate="G$1" pin="2"/>
-<wire x1="218.44" y1="-109.22" x2="208.28" y2="-109.22" width="0.1524" layer="91"/>
-<label x="137.16" y="-109.22" size="1.778" layer="95" rot="R180" xref="yes"/>
+<label x="134.62" y="-104.14" size="1.778" layer="95" rot="R180" xref="yes"/>
 <pinref part="R14" gate="G$1" pin="2"/>
-<wire x1="208.28" y1="-109.22" x2="139.7" y2="-109.22" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="-109.22" x2="137.16" y2="-109.22" width="0.1524" layer="91"/>
-<wire x1="208.28" y1="-109.22" x2="208.28" y2="-96.52" width="0.1524" layer="91"/>
-<junction x="208.28" y="-109.22"/>
+<wire x1="208.28" y1="-104.14" x2="139.7" y2="-104.14" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="-104.14" x2="134.62" y2="-104.14" width="0.1524" layer="91"/>
+<wire x1="208.28" y1="-104.14" x2="208.28" y2="-96.52" width="0.1524" layer="91"/>
 <pinref part="U$5" gate="G$1" pin="SDA"/>
 <wire x1="154.94" y1="-86.36" x2="139.7" y2="-86.36" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="-86.36" x2="139.7" y2="-109.22" width="0.1524" layer="91"/>
-<junction x="139.7" y="-109.22"/>
+<wire x1="139.7" y1="-86.36" x2="139.7" y2="-104.14" width="0.1524" layer="91"/>
+<junction x="139.7" y="-104.14"/>
+<pinref part="I2C" gate="G$1" pin="1"/>
+<wire x1="223.52" y1="-104.14" x2="208.28" y2="-104.14" width="0.1524" layer="91"/>
+<junction x="208.28" y="-104.14"/>
 </segment>
 </net>
 <net name="SCL" class="0">
@@ -16045,17 +16045,18 @@ Source: 008-0260-0_E.pdf</description>
 <label x="0" y="2.54" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
-<label x="132.08" y="-106.68" size="1.778" layer="95" rot="R180" xref="yes"/>
-<pinref part="I2C" gate="G$1" pin="1"/>
-<wire x1="218.44" y1="-106.68" x2="137.16" y2="-106.68" width="0.1524" layer="91"/>
-<pinref part="R17" gate="G$1" pin="2"/>
-<wire x1="218.44" y1="-106.68" x2="218.44" y2="-96.52" width="0.1524" layer="91"/>
-<junction x="218.44" y="-106.68"/>
-<wire x1="132.08" y1="-106.68" x2="137.16" y2="-106.68" width="0.1524" layer="91"/>
+<label x="127" y="-106.68" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="127" y1="-106.68" x2="137.16" y2="-106.68" width="0.1524" layer="91"/>
 <wire x1="137.16" y1="-106.68" x2="137.16" y2="-83.82" width="0.1524" layer="91"/>
 <pinref part="U$5" gate="G$1" pin="SCL"/>
 <wire x1="137.16" y1="-83.82" x2="154.94" y2="-83.82" width="0.1524" layer="91"/>
+<pinref part="I2C" gate="G$1" pin="2"/>
+<wire x1="137.16" y1="-106.68" x2="218.44" y2="-106.68" width="0.1524" layer="91"/>
+<pinref part="R17" gate="G$1" pin="2"/>
+<wire x1="218.44" y1="-106.68" x2="223.52" y2="-106.68" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="-96.52" x2="218.44" y2="-106.68" width="0.1524" layer="91"/>
 <junction x="137.16" y="-106.68"/>
+<junction x="218.44" y="-106.68"/>
 </segment>
 </net>
 <net name="5V_ACT" class="0">
