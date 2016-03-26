@@ -77,7 +77,7 @@ boolean Touch_DataAvailable()
 
 uint16_t Touch_GetX(void)
 {
-  sint16_t value;
+  int16_t value;
 
   value = ((Touch_X - PixOffsX) / PixSizeX);
 
@@ -91,8 +91,8 @@ uint16_t Touch_GetX(void)
 
 uint16_t Touch_GetY(void)
 {
-  sint16_t value;
-  value = ((TP_Y - PixOffsY) / PixSizeY);
+  int16_t value;
+  value = ((Touch_Y - PixOffsY) / PixSizeY);
   if(value < 0)
   {
     value = 0;
