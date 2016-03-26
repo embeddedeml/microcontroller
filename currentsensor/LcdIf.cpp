@@ -15,6 +15,7 @@
 
 #define LCDIF_TIMER_INIT  7
 
+static void LcdIf_Clear(void);
 static void LcdIf_Update(void);
 static void LcdIf_WriteText(const unsigned char *text, uint8_t len);
 static void LcdIf_WriteNumber(uint16_t value);
@@ -44,8 +45,10 @@ void LcdIf_Init(Spi *spi)
 
   lcd.setSpi(spi);
   lcd.begin();
-  lcd.setTextColor(ILI9341_BLACK, ILI9341_LIGHTGREY);
+  lcd.setRotation(3);
+  lcd.setTextColor(ILI9341_BLACK, ILI9341_WHITE);
   lcd.setTextSize(2);
+  lcd.fillScreen(ILI9341_WHITE);
 
   /* initialize touch screen driver */
   Touch_Init(spi);
@@ -61,6 +64,7 @@ void LcdIf_MainFunction(void)
     digitalWrite(LCD_LED, HIGH);
     LcdIf_Timer = LCDIF_TIMER_INIT;
     Touch_Read();
+    LcdIf_Clear();
 
     /*
      unsigned int  i,j;
@@ -82,28 +86,40 @@ void LcdIf_MainFunction(void)
   }
 }
 
+static void LcdIf_Clear(void)
+{
+  /* Voltage */
+  lcd.setCursor(10, 10);
+  LcdIf_WriteText(LcdIf_Text_Voltage, sizeof(LcdIf_Text_Voltage)-1);
+
+  /* Charge Current */
+  lcd.setCursor(10, 40);
+  LcdIf_WriteText(LcdIf_Text_Charge, sizeof(LcdIf_Text_Charge)-1);
+
+  /* Charge Current */
+  lcd.setCursor(10, 70);
+  LcdIf_WriteText(LcdIf_Text_Discharge, sizeof(LcdIf_Text_Discharge)-1);
+}
+
 static void LcdIf_Update(void)
 {
   uint16_t value;
 
   /* Voltage */
   value = AdcIf_GetValue(0);
-  lcd.setCursor(10, 10);
-  LcdIf_WriteText(LcdIf_Text_Voltage, sizeof(LcdIf_Text_Voltage));
+  lcd.setCursor(180, 10);
   LcdIf_WriteNumber(value);
   lcd.write('V');
 
   /* Charge Current */
   value = AdcIf_GetValue(1);
-  lcd.setCursor(10, 50);
-  LcdIf_WriteText(LcdIf_Text_Charge, sizeof(LcdIf_Text_Charge));
+  lcd.setCursor(180, 40);
   LcdIf_WriteNumber(value);
   lcd.write('A');
 
   /* Charge Current */
   value = AdcIf_GetValue(2);
-  lcd.setCursor(10, 100);
-  LcdIf_WriteText(LcdIf_Text_Discharge, sizeof(LcdIf_Text_Discharge));
+  lcd.setCursor(180, 70);
   LcdIf_WriteNumber(value);
   lcd.write('A');
 }
