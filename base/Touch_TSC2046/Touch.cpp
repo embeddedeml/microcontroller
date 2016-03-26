@@ -13,6 +13,8 @@
 #define PixSizeY  -10.625
 #define PixOffsX  3800
 #define PixOffsY  3800
+#define PixMaxX   239
+#define PixMaxY   319
 
 static void Touch_WriteData(uint8_t c);
 static uint16_t Touch_ReadData(void);
@@ -78,12 +80,20 @@ boolean Touch_DataAvailable()
 uint16_t Touch_GetX(void)
 {
   int16_t value;
-  value  = Touch_X - PixOffsX;
+  value = Touch_X - PixOffsX;
   value /= PixSizeX;
 
   if(value < 0)
   {
     value = 0;
+  }
+  else if(value > PixMaxX)
+  {
+    value = PixMaxX;
+  }
+  else
+  {
+    /* empty */
   }
 
   return ((uint16_t) value);
@@ -92,12 +102,20 @@ uint16_t Touch_GetX(void)
 uint16_t Touch_GetY(void)
 {
   int16_t value;
-  value  = Touch_Y - PixOffsY;
+  value = Touch_Y - PixOffsY;
   value /= PixSizeY;
 
   if(value < 0)
   {
     value = 0;
+  }
+  else if(value > PixMaxY)
+  {
+    value = PixMaxY;
+  }
+  else
+  {
+    /* empty */
   }
 
   return ((uint16_t) value);
