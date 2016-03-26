@@ -81,6 +81,22 @@ void Adc_Init(void)
 }
 
 /**
+ * @brief Enables ADC. API must be called after sleep mode.
+ */
+void Adc_Enable(void)
+{
+    ADCSRA |= (1 << ADEN); /* Enable ADC */
+}
+
+/**
+ * @brief Disables ADC. API must be called before sleep mode.
+ */
+void Adc_Disable(void)
+{
+    ADCSRA &= ~(1 << ADEN); /* Disable ADC */
+}
+
+/**
  * @brief Starts conversion of all configured channels
  *
  * @param   resultBuffer    Pointer to result buffer. Must be large enough for results of all channels and all samples

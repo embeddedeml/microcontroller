@@ -11,6 +11,8 @@
 #include "Adc_Cfg.h"
 
 void Adc_Init(void);
+void Adc_Enable(void);
+void Adc_Disable(void);
 StdReturnType Adc_StartConversion(uint16_t *resultBuffer, uint8_t count);
 boolean Adc_ConversionFinished(void);
 
