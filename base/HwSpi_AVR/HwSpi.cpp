@@ -14,7 +14,7 @@ HwSpi::HwSpi()
   pinMode(SPI_MISO, INPUT);
 
   /* set baudrate to fOsc/2 */
-  SPSR = (1 << SPI2X);
+  /* SPSR |= (1 << SPI2X); */
 
   /* enable SPI in master mode */
   SPCR = (1 << SPE) | (1 << MSTR);
