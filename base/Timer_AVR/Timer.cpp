@@ -10,7 +10,7 @@
 
 #if TIMER_TIMER1_USED == STD_ON
 /**
- * @brief Initializes and starts hardware timer 1
+ * @brief Initializes and starts hardware timer 1 (Counter 1 / 16-bit)
  */
 void Timer_Timer1_Start(uint16_t intervall_us)
 {
@@ -41,7 +41,7 @@ ISR (TIMER1_COMPA_vect)
 
 #if TIMER_TIMER2_USED == STD_ON
 /**
- * @brief Initializes and starts hardware timer 2
+ * @brief Initializes and starts hardware timer 2 (Counter 3 / 16-bit)
  */
 void Timer_Timer2_Start(uint16_t intervall_us)
 {
@@ -72,7 +72,7 @@ ISR (TIMER3_COMPA_vect)
 
 #if TIMER_TIMER3_USED == STD_ON
 /**
- * @brief Initializes and starts hardware timer 3
+ * @brief Initializes and starts hardware timer 3 (Counter 0 / 8-bit)
  */
 void Timer_Timer3_Start(uint16_t intervall_us)
 {
