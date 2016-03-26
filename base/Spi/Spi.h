@@ -13,6 +13,7 @@ class Spi
 {
 public:
   Spi();
+  virtual ~Spi();
 
   /* must be implemented in sub-class */
   virtual uint8_t transmitSync(uint8_t c) = 0;

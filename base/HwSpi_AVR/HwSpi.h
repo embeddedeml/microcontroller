@@ -14,6 +14,7 @@ class HwSpi : public Spi
 {
 public:
   HwSpi();
+  ~HwSpi();
 
   uint8_t transmitSync(uint8_t c);
 };

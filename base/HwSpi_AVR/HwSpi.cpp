@@ -31,3 +31,8 @@ uint8_t HwSpi::transmitSync(uint8_t c)
   /* return received data */
   return SPDR;
 }
+
+HwSpi::~HwSpi()
+{
+
+}
