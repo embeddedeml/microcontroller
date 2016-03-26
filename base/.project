@@ -3,6 +3,7 @@
 	<name>base</name>
 	<comment></comment>
 	<projects>
+		<project>currentsensor</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
