@@ -13,7 +13,7 @@ HwSpi::HwSpi()
   pinMode(SPI_MOSI, OUTPUT);
   pinMode(SPI_MISO, INPUT);
 
-  /* set baudrate to fOsc/2 */
+  /* TODO: set baudrate to fOsc/2 */
   /* SPSR |= (1 << SPI2X); */
 
   /* enable SPI in master mode */
