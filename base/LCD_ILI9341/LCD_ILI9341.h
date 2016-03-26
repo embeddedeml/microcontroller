@@ -113,8 +113,9 @@ class LCD_ILI9341: public LCD_GFX
 
 public:
 
-  LCD_ILI9341(Spi& spi, uint8_t dc, uint8_t rst, uint8_t cs);
+  LCD_ILI9341(uint8_t dc, uint8_t rst, uint8_t cs);
 
+  void setSpi(Spi *spi);
   void begin(void);
   void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
   void pushColor(uint16_t color);
@@ -137,7 +138,7 @@ private:
   uint8_t _dc;
   uint8_t _rst;
   uint8_t _cs;
-  Spi& _spi;
+  Spi *_spi;
 };
 
 #endif

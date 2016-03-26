@@ -19,17 +19,22 @@
 #include <util/delay.h>
 
 // Constructor when using software SPI.  All output pins are configurable.
-LCD_ILI9341::LCD_ILI9341(Spi& spi, uint8_t dc, uint8_t rst, uint8_t cs) :
-    LCD_GFX(ILI9341_TFTWIDTH, ILI9341_TFTHEIGHT), _spi(spi)
+LCD_ILI9341::LCD_ILI9341(uint8_t dc, uint8_t rst, uint8_t cs) :
+    LCD_GFX(ILI9341_TFTWIDTH, ILI9341_TFTHEIGHT)
 {
   _dc = dc;
   _rst = rst;
   _cs = cs;
 }
 
+void LCD_ILI9341::setSpi(Spi *spi)
+{
+  _spi = spi;
+}
+
 void LCD_ILI9341::spiwrite(uint8_t c)
 {
-  _spi.transmitSync(c);
+  _spi->transmitSync(c);
 }
 
 void LCD_ILI9341::writecommand(uint8_t c)
