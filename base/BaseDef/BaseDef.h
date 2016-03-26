@@ -8,8 +8,10 @@
 #define BASE_H_
 
 #include "stdint.h"
+#include "stdlib.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/pgmspace.h>
 
 #define HIGH 	(0x01)
 #define LOW  	(0x00)
@@ -27,7 +29,7 @@
 #define E_NOT_OK    (0x01)
 
 typedef uint8_t StdReturnType;
-typedef uint8_t Boolean;
+typedef uint8_t boolean;
 
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
