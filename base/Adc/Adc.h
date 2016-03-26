@@ -12,7 +12,7 @@
 
 void Adc_Init(void);
 StdReturnType Adc_StartConversion(uint16_t *resultBuffer, uint8_t count);
-Boolean Adc_ConversionFinished(void);
+boolean Adc_ConversionFinished(void);
 
 /* Callback */
 void Adc_ConversionFinished_Indication(void);

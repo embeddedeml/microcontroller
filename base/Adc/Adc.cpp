@@ -116,9 +116,9 @@ StdReturnType Adc_StartConversion(uint16_t *resultBuffer, uint8_t count)
  * @return  TRUE    conversion finished
  * @return  FALSE   conversion not finished
  */
-Boolean Adc_ConversionFinished(void)
+boolean Adc_ConversionFinished(void)
 {
-    Boolean retVal = false;
+    boolean retVal = false;
     if(Adc_Status == ADC_STATUS_IDLE)
     {
         retVal = true;
