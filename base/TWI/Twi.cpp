@@ -83,7 +83,7 @@
  }
 
  ********************************************************/
-#include "twi_master.h"
+#include "Twi.h"
 
 
 /*******************************************************
@@ -99,7 +99,7 @@
  - TRUE:	Bitrate OK
 
  *******************************************************/
-uint8_t twim_init (uint32_t TWI_Bitrate)
+uint8_t Twi_Init (uint32_t TWI_Bitrate)
 {
 	 //  Set TWI bitrate
 	 // If bitrate is too high, then error return
@@ -125,7 +125,7 @@ uint8_t twim_init (uint32_t TWI_Bitrate)
  - FALSE:	Error in starting TWI Master
 
  *******************************************************/
-uint8_t twim_start (uint8_t Address, uint8_t TWIM_Type)
+uint8_t Twi_Start (uint8_t Address, uint8_t TWIM_Type)
 {
 
 	uint8_t twst;
@@ -169,7 +169,7 @@ uint8_t twim_start (uint8_t Address, uint8_t TWIM_Type)
  Return Value: None
 
  *******************************************************/
-uint8_t twim_stop (void)
+uint8_t Twi_Stop (void)
 {
 
 	/*
@@ -196,7 +196,7 @@ uint8_t twim_stop (void)
  - FALSE:	Error in byte transmission
 
  *******************************************************/
-uint8_t twim_write (uint8_t byte)
+uint8_t Twi_Write (uint8_t byte)
 {
 	uint8_t twst;
 	/*
@@ -227,7 +227,7 @@ uint8_t twim_write (uint8_t byte)
  - uint8_t	Read byte
 
  *******************************************************/
-uint8_t twim_read_ack (uint8_t *output)
+uint8_t Twi_ReadAck (uint8_t *output)
 {
 	TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWEA);
 	while (!(TWCR & (1<<TWINT)));
@@ -246,7 +246,7 @@ uint8_t twim_read_ack (uint8_t *output)
  - uint8_t	Read byte
 
  *******************************************************/
-uint8_t twim_read_nack (uint8_t *output)
+uint8_t Twi_ReadNack (uint8_t *output)
 {
 	TWCR = (1<<TWINT)|(1<<TWEN);
 	while(!(TWCR & (1<<TWINT)));
